@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F5F5F5;
+  --surface: #ECECEC;
+  --surface2: #E0E0E0;
+  --ink: #0A0A0A;
+  --ink2: #2C2C2C;
+  --ink3: #5A5A5A;
+  --ink4: #8A8A8A;
+  --line: #D0D0D0;
+  --max: 780px;
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page System ── */
+.page {
+  display: none;
+  min-height: 100vh;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.page.active {
+  display: block;
+}
+.page.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Nav ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(245,245,245,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+nav.scrolled { border-bottom-color: var(--line); }
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+.nav-right {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.nav-link {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink3);
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* ── Container ── */
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ── Reveal Animation ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ════════════════════════════════
+   PAGE 1 — HOME
+════════════════════════════════ */
+#page-home {
+  padding-top: 140px;
+  padding-bottom: 120px;
+}
+
+.home-header {
+  padding-bottom: 64px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 64px;
+}
+
+.home-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.home-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--ink4);
+}
+
+.home-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.home-title em {
+  font-style: italic;
+  color: var(--ink2);
+}
+
+.home-bio {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--ink3);
+  max-width: 480px;
+  line-height: 1.75;
+}
+
+/* Project list */
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.project-list { list-style: none; }
+
+.project-item {
+  border-top: 1px solid var(--line);
+  transition: border-color 0.2s;
+}
+.project-item:last-child { border-bottom: 1px solid var(--line); }
+
+.project-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 28px 0;
+  cursor: pointer;
+  text-decoration: none;
+  gap: 24px;
+  transition: all 0.3s var(--ease);
+  position: relative;
+}
+.project-link::before {
+  content: '';
+  position: absolute;
+  left: -32px; right: -32px;
+  top: 0; bottom: 0;
+  background: var(--surface);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.project-link:hover::before { opacity: 1; }
+.project-link > * { position: relative; z-index: 1; }
+
+.project-info { min-width: 0; }
+
+.project-title-link {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  line-height: 1.25;
+  transition: color 0.2s;
+}
+.project-link:hover .project-title-link { color: var(--ink2); }
+
+.project-sub {
+  font-size: 13px;
+  color: var(--ink4);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-arrow {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s var(--ease);
+  color: var(--ink4);
+}
+.project-link:hover .project-arrow {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+  transform: translate(2px, -2px);
+}
+
+/* ════════════════════════════════
+   PAGE 2 — PROJECT
+════════════════════════════════ */
+#page-project {
+  padding-top: 100px;
+}
+
+.project-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 64px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 60px 32px 120px;
+  align-items: start;
+}
+
+/* TOC */
+.toc-wrapper {
+  position: sticky;
+  top: 100px;
+}
+.toc-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 20px;
+}
+.toc-list { list-style: none; }
+.toc-item {
+  margin-bottom: 2px;
+}
+.toc-link {
+  display: block;
+  font-size: 13px;
+  color: var(--ink4);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.25s;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.toc-link:hover,
+.toc-link.active {
+  color: var(--ink);
+}
+.toc-link.active { font-weight: 500; }
+
+/* Project body */
+.project-body-wrap {}
+
+.project-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  cursor: pointer;
+  margin-bottom: 48px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.project-back:hover { color: var(--ink); }
+.project-back svg { transition: transform 0.2s; }
+.project-back:hover svg { transform: translateX(-3px); }
+
+.project-header-tag {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 20px;
+}
+
+.project-main-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.project-main-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--ink3);
+  line-height: 1.7;
+  margin-bottom: 48px;
+}
+
+.project-hero-img {
+  width: 100%;
+  border-radius: 4px;
+  display: block;
+  background: var(--surface);
+  margin-bottom: 56px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.project-hero-img.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink4);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+
+.project-content h1,
+.project-content h2,
+.project-content h3,
+.project-content h4,
+.project-content h5 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  color: var(--ink);
+  margin-top: 56px;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 100px;
+}
+.project-content h1 { font-size: 32px; line-height: 1.18; }
+.project-content h2 { font-size: 26px; line-height: 1.2; }
+.project-content h3 { font-size: 21px; line-height: 1.25; }
+.project-content h4 { font-size: 17px; line-height: 1.3; }
+.project-content h5 { font-size: 14px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'Inter', sans-serif; color: var(--ink3); }
+
+.project-content p {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--ink2);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+.project-content img,
+.project-content video {
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 32px 0;
+  display: block;
+}
+.project-content blockquote {
+  border-left: 2px solid var(--ink);
+  padding: 4px 0 4px 24px;
+  margin: 32px 0;
+  font-style: italic;
+  color: var(--ink3);
+}
+.project-content ul, .project-content ol {
+  padding-left: 24px;
+  margin-bottom: 24px;
+  color: var(--ink2);
+  line-height: 1.8;
+}
+.project-content code {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  background: var(--surface);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.project-content pre {
+  background: var(--surface);
+  padding: 20px 24px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 24px 0;
+  font-size: 13px;
+}
+
+/* ════════════════════════════════
+   PAGE 3 — ADMIN
+════════════════════════════════ */
+#page-admin {
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+/* Login */
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.login-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 48px 48px;
+  width: 100%;
+  max-width: 380px;
+}
+.login-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.login-sub {
+  font-size: 13px;
+  color: var(--ink4);
+  margin-bottom: 36px;
+}
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 8px;
+}
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--ink); background: white; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 24px;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  width: 100%;
+}
+.btn-primary:hover { background: var(--ink2); }
+.btn-secondary {
+  background: var(--surface);
+  color: var(--ink);
+}
+.btn-secondary:hover { background: var(--surface2); }
+.btn-danger {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+.btn-danger:hover { background: #FECACA; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+
+.login-error {
+  font-size: 13px;
+  color: #B91C1C;
+  margin-top: 12px;
+  display: none;
+}
+
+/* Admin Dashboard */
+.admin-dashboard { display: none; }
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: white;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.admin-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink);
+}
+.admin-actions { display: flex; gap: 10px; }
+
+.admin-sidebar-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.admin-sidebar {
+  border-right: 1px solid var(--line);
+  padding: 24px 0;
+  background: white;
+  overflow-y: auto;
+}
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  padding: 0 20px 12px;
+}
+.sidebar-project-item {
+  padding: 14px 20px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+.sidebar-project-item:hover {
+  background: var(--bg);
+  border-left-color: var(--line);
+}
+.sidebar-project-item.active {
+  background: var(--surface);
+  border-left-color: var(--ink);
+}
+.sidebar-project-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-project-sub {
+  font-size: 11px;
+  color: var(--ink4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-new-btn {
+  margin: 16px 20px 0;
+  width: calc(100% - 40px);
+}
+
+/* Editor split */
+.editor-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+  overflow: hidden;
+}
+.editor-pane-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  flex-shrink: 0;
+}
+.editor-pane-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink4);
+}
+.editor-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  background: var(--bg);
+}
+
+.editor-field { margin-bottom: 16px; }
+
+/* Rich text toolbar */
+.rich-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 10px;
+  background: white;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+}
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: var(--ink3);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+.tb-btn:hover { background: var(--surface); color: var(--ink); }
+.tb-btn.active { background: var(--ink); color: white; }
+.tb-sep {
+  width: 1px;
+  background: var(--line);
+  margin: 4px 2px;
+  align-self: stretch;
+}
+
+.rich-editor {
+  min-height: 400px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 0 0 5px 5px;
+  background: white;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.rich-editor:empty::before {
+  content: 'Start writing your project content…';
+  color: var(--ink4);
+  pointer-events: none;
+}
+.rich-editor h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 400; margin: 24px 0 12px; color: var(--ink); }
+.rich-editor h2 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 400; margin: 20px 0 10px; }
+.rich-editor h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 400; margin: 18px 0 8px; }
+.rich-editor h4 { font-size: 16px; font-weight: 600; margin: 16px 0 8px; }
+.rich-editor h5 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 14px 0 6px; color: var(--ink3); }
+.rich-editor p { margin-bottom: 12px; }
+.rich-editor img { max-width: 100%; border-radius: 4px; margin: 12px 0; display: block; }
+.rich-editor video { max-width: 100%; border-radius: 4px; margin: 12px 0; display: block; }
+.rich-editor blockquote { border-left: 2px solid var(--ink3); padding-left: 16px; color: var(--ink3); font-style: italic; margin: 12px 0; }
+
+/* Media upload */
+.upload-zone {
+  border: 1px dashed var(--line);
+  border-radius: 5px;
+  padding: 16px;
+  background: white;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+  color: var(--ink4);
+}
+.upload-zone:hover { border-color: var(--ink3); color: var(--ink3); background: var(--bg); }
+
+/* Preview pane */
+.preview-pane {
+  overflow-y: auto;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.preview-pane-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line);
+  background: white;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.preview-pane-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink4);
+}
+.preview-body {
+  padding: 32px;
+  flex: 1;
+}
+.preview-tag {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 16px;
+}
+.preview-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.preview-sub {
+  font-size: 15px;
+  color: var(--ink3);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+.preview-divider {
+  height: 1px;
+  background: var(--line);
+  margin-bottom: 32px;
+}
+.preview-content { font-size: 14px; }
+.preview-content h1 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 400; margin: 20px 0 10px; color: var(--ink); }
+.preview-content h2 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 400; margin: 18px 0 9px; color: var(--ink); }
+.preview-content h3 { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 400; margin: 14px 0 7px; }
+.preview-content h4 { font-size: 14px; font-weight: 600; margin: 12px 0 6px; }
+.preview-content h5 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 12px 0 5px; color: var(--ink3); }
+.preview-content p { font-size: 14px; color: var(--ink2); line-height: 1.75; margin-bottom: 16px; }
+.preview-content img { max-width: 100%; border-radius: 3px; margin: 12px 0; display: block; }
+.preview-content video { max-width: 100%; border-radius: 3px; margin: 12px 0; display: block; }
+.preview-content blockquote { border-left: 2px solid var(--ink); padding-left: 16px; font-style: italic; color: var(--ink3); margin: 12px 0; }
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 60px 24px;
+  text-align: center;
+}
+.empty-icon { font-size: 36px; margin-bottom: 16px; opacity: 0.3; }
+.empty-text { font-size: 14px; color: var(--ink4); }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: white;
+  font-size: 13px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.3s var(--ease);
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* Image in admin */
+.project-img-preview {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 12px;
+  display: block;
+}
+.project-img-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--surface);
+  border-radius: 5px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--ink4);
+  letter-spacing: 0.06em;
+  border: 1px dashed var(--line);
+}
+
+/* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+.site-footer {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 32px 48px;
+  border-top: 1px solid var(--line);
+  margin-top: 80px;
+  padding-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-copy {
+  font-size: 12px;
+  color: var(--ink4);
+}
+.footer-link {
+  font-size: 12px;
+  color: var(--ink4);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: var(--ink); }
+
+/* ── Misc ── */
+.no-projects {
+  padding: 60px 0;
+  text-align: center;
+  color: var(--ink4);
+  font-size: 14px;
+}
+
+/* Image hero upload in editor */
+.img-hero-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+.img-hero-thumb {
+  width: 72px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .project-layout { grid-template-columns: 1fr; }
+  .toc-wrapper { display: none; }
+  .admin-sidebar-layout { grid-template-columns: 1fr; }
+  .admin-sidebar { border-right: none; border-bottom: 1px solid var(--line); padding: 16px 0; }
+  .editor-split { grid-template-columns: 1fr; height: auto; }
+  .editor-pane, .preview-pane { height: 500px; }
+}
+
+@media (max-width: 600px) {
+  nav { padding: 16px 20px; }
+  .container { padding: 0 20px; }
+  .project-layout { padding: 40px 20px 80px; }
+  .admin-header { padding: 14px 20px; }
+  .editor-body, .preview-body { padding: 16px; }
+}
+
+/* Animated underline rule */
+.animated-rule {
+  height: 1px;
+  background: linear-gradient(90deg, var(--ink) 0%, transparent 100%);
+  transform-origin: left;
+  animation: ruleExpand 1.2s var(--ease) forwards;
+  margin-bottom: 48px;
+}
+@keyframes ruleExpand {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <span class="nav-logo" onclick="showPage('home')">Portfolio</span>
+  <div class="nav-right">
+    <span class="nav-link" onclick="showPage('home')">Work</span>
+    <span class="nav-link" id="nav-admin-link" onclick="showPage('admin')">Admin</span>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════ PAGE: HOME ══════════ -->
+<div class="page" id="page-home">
+  <div class="container">
+    <div class="home-header reveal">
+      <div class="home-eyebrow reveal reveal-delay-1">Selected Work</div>
+      <h1 class="home-title reveal reveal-delay-2">Design & <em>Engineering</em><br>at the boundary</h1>
+      <p class="home-bio reveal reveal-delay-3">I build things that feel considered — from digital products to physical systems. Based in the space between rigour and intuition.</p>
+    </div>
+
+    <div>
+      <div class="section-label reveal">
+        <span>Projects</span>
+        <span id="project-count">— 2</span>
+      </div>
+      <ul class="project-list" id="project-list">
+        <!-- populated by JS -->
+      </ul>
+      <div class="no-projects" id="no-projects" style="display:none">No projects yet. <span class="footer-link" onclick="showPage('admin')">Add one in Admin →</span></div>
+    </div>
+  </div>
+
+  <footer class="site-footer reveal">
+    <span class="footer-copy">© 2025 Portfolio</span>
+    <span class="footer-link" onclick="showPage('admin')">Admin</span>
+  </footer>
+</div>
+
+<!-- ══════════ PAGE: PROJECT ══════════ -->
+<div class="page" id="page-project">
+  <div class="project-layout" id="project-layout">
+    <!-- TOC sidebar -->
+    <aside class="toc-wrapper">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list" id="toc-list"></ul>
+    </aside>
+
+    <!-- Body -->
+    <article class="project-body-wrap">
+      <span class="project-back reveal" onclick="showPage('home')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </span>
+
+      <div class="project-header-tag reveal" id="proj-tag">Project</div>
+      <h1 class="project-main-title reveal" id="proj-title">—</h1>
+      <p class="project-main-sub reveal" id="proj-sub">—</p>
+
+      <div class="project-hero-img placeholder reveal" id="proj-hero">No cover image</div>
+
+      <div class="project-content reveal" id="proj-content"></div>
+    </article>
+  </div>
+</div>
+
+<!-- ══════════ PAGE: ADMIN ══════════ -->
+<div class="page" id="page-admin">
+
+  <!-- LOGIN -->
+  <div class="admin-login" id="admin-login">
+    <div class="login-card">
+      <h2 class="login-title">Admin Access</h2>
+      <p class="login-sub">Protected area. Enter your credentials to continue.</p>
+      <div class="form-group">
+        <label class="form-label" for="login-user">Username</label>
+        <input class="form-input" type="text" id="login-user" placeholder="admin" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="login-pass">Password</label>
+        <input class="form-input" type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" onclick="doLogin()">Sign in</button>
+      <div class="login-error" id="login-error">Incorrect credentials. Try again.</div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="admin-dashboard" id="admin-dashboard">
+
+    <div class="admin-header">
+      <span class="admin-title">Admin — Projects</span>
+      <div class="admin-actions">
+        <button class="btn btn-secondary btn-sm" onclick="showPage('home')">← View site</button>
+        <button class="btn btn-secondary btn-sm" onclick="doLogout()">Sign out</button>
+      </div>
+    </div>
+
+    <div class="admin-sidebar-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-section-label">Projects</div>
+        <div id="sidebar-list"></div>
+        <button class="btn btn-primary btn-sm sidebar-new-btn" onclick="newProject()">+ New project</button>
+      </aside>
+
+      <!-- EDITOR + PREVIEW -->
+      <div class="editor-split" id="editor-area">
+
+        <!-- Empty state -->
+        <div class="empty-state" id="editor-empty" style="grid-column:1/-1">
+          <div class="empty-icon">✦</div>
+          <div class="empty-text">Select a project or create a new one</div>
+        </div>
+
+        <!-- Editor pane (hidden until project selected) -->
+        <div class="editor-pane" id="editor-pane" style="display:none">
+          <div class="editor-pane-header">
+            <span class="editor-pane-label">Editor</span>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-danger btn-sm" id="delete-btn" onclick="deleteCurrentProject()">Delete</button>
+              <button class="btn btn-primary btn-sm" onclick="saveProject()">Save</button>
+            </div>
+          </div>
+          <div class="editor-body">
+
+            <div class="editor-field">
+              <label class="form-label">Project Title</label>
+              <input class="form-input" type="text" id="edit-title" placeholder="Untitled project" oninput="updatePreview()">
+            </div>
+
+            <div class="editor-field">
+              <label class="form-label">Subtext / Tagline</label>
+              <input class="form-input" type="text" id="edit-sub" placeholder="Brief description shown on homepage" oninput="updatePreview()">
+            </div>
+
+            <div class="editor-field">
+              <label class="form-label">Cover Image</label>
+              <div id="hero-thumb-container">
+                <div class="project-img-placeholder" id="hero-placeholder">No cover image</div>
+              </div>
+              <div class="img-hero-row">
+                <input type="file" id="hero-file" accept="image/*" style="display:none" onchange="handleHeroImage(this)">
+                <button class="btn btn-secondary btn-sm" onclick="document.getElementById('hero-file').click()">Upload image</button>
+                <button class="btn btn-secondary btn-sm" onclick="removeHeroImage()" id="hero-remove-btn" style="display:none">Remove</button>
+              </div>
+            </div>
+
+            <div class="editor-field">
+              <label class="form-label" style="margin-bottom:0">Content</label>
+              <div style="height:6px"></div>
+              <div class="rich-toolbar" id="rich-toolbar">
+                <button class="tb-btn" onclick="execCmd('formatBlock','h1')" title="Heading 1">H1</button>
+                <button class="tb-btn" onclick="execCmd('formatBlock','h2')" title="Heading 2">H2</button>
+                <button class="tb-btn" onclick="execCmd('formatBlock','h3')" title="Heading 3">H3</button>
+                <button class="tb-btn" onclick="execCmd('formatBlock','h4')" title="Heading 4">H4</button>
+                <button class="tb-btn" onclick="execCmd('formatBlock','h5')" title="Heading 5">H5</button>
+                <button class="tb-btn" onclick="execCmd('formatBlock','p')" title="Paragraph">¶</button>
+                <div class="tb-sep"></div>
+                <button class="tb-btn" onclick="execCmd('bold')" title="Bold"><b>B</b></button>
+                <button class="tb-btn" onclick="execCmd('italic')" title="Italic"><i>I</i></button>
+                <button class="tb-btn" onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+                <button class="tb-btn" onclick="execCmd('strikeThrough')" title="Strikethrough"><s>S</s></button>
+                <div class="tb-sep"></div>
+                <button class="tb-btn" onclick="execCmd('insertUnorderedList')" title="Bullet list">•</button>
+                <button class="tb-btn" onclick="execCmd('insertOrderedList')" title="Numbered list">1.</button>
+                <button class="tb-btn" onclick="execInsert('blockquote')" title="Blockquote">"</button>
+                <div class="tb-sep"></div>
+                <button class="tb-btn" onclick="insertLink()" title="Link">🔗</button>
+                <button class="tb-btn" onclick="document.getElementById('media-file').click()" title="Image / GIF / Video">🖼</button>
+                <input type="file" id="media-file" accept="image/*,video/*,.gif" style="display:none" onchange="handleMediaInsert(this)">
+                <div class="tb-sep"></div>
+                <button class="tb-btn" onclick="execCmd('removeFormat')" title="Clear format">✕</button>
+              </div>
+              <div class="rich-editor" id="rich-editor" contenteditable="true" oninput="updatePreview()" onkeydown="handleEditorKey(event)"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Preview pane -->
+        <div class="preview-pane" id="preview-pane" style="display:none">
+          <div class="preview-pane-header">
+            <span class="preview-pane-label">Preview</span>
+          </div>
+          <div class="preview-body">
+            <div class="preview-tag">Project</div>
+            <div class="preview-title" id="preview-title">—</div>
+            <div class="preview-sub" id="preview-sub">—</div>
+            <div id="preview-hero-container"></div>
+            <div class="preview-divider"></div>
+            <div class="preview-content" id="preview-content"></div>
+          </div>
+        </div>
+
+      </div><!-- /editor-split -->
+    </div><!-- /sidebar-layout -->
+  </div><!-- /dashboard -->
+</div><!-- /admin page -->
+
+<script>
+/* ════════════════════════════════════════
+   DATA STORE (localStorage)
+════════════════════════════════════════ */
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'portfolio2025';
+const STORAGE_KEY = 'portfolio_projects';
+
+let projects = [];
+let currentProjectId = null;
+let isLoggedIn = false;
+
+function loadProjects() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) projects = JSON.parse(raw);
+    else projects = getDefaultProjects();
+  } catch(e) { projects = getDefaultProjects(); }
+}
+
+function saveProjects() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+}
+
+function getDefaultProjects() {
+  return [
+    {
+      id: 'proj-1',
+      title: 'Meridian — A Navigation OS',
+      sub: 'Redesigning spatial awareness for the next generation of autonomous systems',
+      heroImage: null,
+      content: `<h2>Overview</h2><p>Meridian is a comprehensive navigation operating system built for environments where GPS signals are absent or unreliable — underground transit, dense urban canyons, and indoor industrial complexes. The project spanned three years of research, prototyping, and deployment across twelve cities.</p><h2>The Problem</h2><p>Existing navigation systems fail catastrophically in GPS-denied environments. Transit operators, emergency responders, and logistics teams rely on outdated paper maps or expensive proprietary solutions with poor accuracy. Meridian set out to solve this with a hybrid sensor-fusion approach.</p><h3>Research Phase</h3><p>We conducted contextual interviews with 84 transit operators across six countries, observing how they navigate signal loss and how errors compound over time. The core insight: people needed confidence signals as much as accurate data.</p><h2>Design Decisions</h2><p>The interface prioritises three things: ambient awareness, quick correction, and graceful degradation. When sensor confidence drops below a threshold, the UI shifts into a distinctive low-confidence mode — the design communicates uncertainty rather than hiding it.</p><h3>Technical Architecture</h3><p>Meridian fuses data from inertial measurement units, barometric pressure sensors, WiFi fingerprinting, and machine-learned dead reckoning. The entire stack runs on-device, processing at 120Hz with under 4ms latency.</p><h2>Outcome</h2><p>Deployed in three metro systems. Achieved sub-metre accuracy in 94% of tested corridors. Average operator trust score: 8.7/10 — up from 3.2 with previous systems.</p>`,
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: 'proj-2',
+      title: 'Forma — Material Intelligence',
+      sub: 'An AI-assisted material selection tool for sustainable architecture',
+      heroImage: null,
+      content: `<h2>Background</h2><p>Architecture firms spend an average of 340 hours per project on material research and specification. Forma reduces this to under 40 hours while simultaneously improving sustainability outcomes and cost predictability.</p><h2>Core Challenge</h2><p>Material selection involves thousands of interdependent variables: structural performance, embodied carbon, cost trajectories, lead times, aesthetic coherence, and regulatory compliance. No single expert can hold all of this in their head. Forma makes it possible.</p><h3>Intelligence Layer</h3><p>The underlying model was trained on 2.3 million material specifications, 180,000 completed projects, and real-time pricing from 600 suppliers. It understands context — a coastal building faces different material constraints than an inland one, even if the programs are identical.</p><h2>Interface Design</h2><p>Rather than surfacing a list of options, Forma surfaces a field of possibilities — a spatial canvas where materials cluster by compatibility, sustainability profile, and cost band. Architects explore by zooming, filtering, and comparing, not by navigating menus.</p><h3>Collaboration Features</h3><p>A shared project space allows structural engineers, interior designers, and clients to annotate the material field together. Decisions are logged with reasoning, creating a searchable specification history that survives personnel changes.</p><h2>Impact</h2><p>Used by 340 architecture firms in 28 countries. Average embodied carbon reduction: 23% compared to traditional selection methods. Average specification time reduction: 88%.</p>`,
+      createdAt: new Date().toISOString()
+    }
+  ];
+}
+
+/* ════════════════════════════════════════
+   PAGE NAVIGATION
+════════════════════════════════════════ */
+let currentPage = 'home';
+
+function showPage(name, projectId) {
+  const pages = document.querySelectorAll('.page');
+  const prev = document.getElementById('page-' + currentPage);
+
+  if (prev) {
+    prev.classList.remove('visible');
+    setTimeout(() => {
+      prev.classList.remove('active');
+      activatePage(name, projectId);
+    }, 300);
+  } else {
+    activatePage(name, projectId);
+  }
+}
+
+function activatePage(name, projectId) {
+  currentPage = name;
+  const page = document.getElementById('page-' + name);
+  if (!page) return;
+  page.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      page.classList.add('visible');
+      initReveal();
+    });
+  });
+
+  if (name === 'home') renderHome();
+  if (name === 'project' && projectId) renderProject(projectId);
+  if (name === 'admin') renderAdmin();
+}
+
+/* ════════════════════════════════════════
+   HOME PAGE
+════════════════════════════════════════ */
+function renderHome() {
+  const list = document.getElementById('project-list');
+  const noP = document.getElementById('no-projects');
+  const count = document.getElementById('project-count');
+
+  count.textContent = '— ' + projects.length;
+
+  if (projects.length === 0) {
+    list.innerHTML = '';
+    noP.style.display = '';
+    return;
+  }
+  noP.style.display = 'none';
+
+  list.innerHTML = projects.map((p, i) => `
+    <li class="project-item reveal" style="transition-delay:${0.1 + i * 0.08}s">
+      <div class="project-link" onclick="showPage('project','${p.id}')">
+        <div class="project-info">
+          <div class="project-title-link">${escHtml(p.title)}</div>
+          <div class="project-sub">${escHtml(p.sub || '')}</div>
+        </div>
+        <div class="project-arrow">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </li>
+  `).join('');
+
+  initReveal();
+}
+
+/* ════════════════════════════════════════
+   PROJECT PAGE
+════════════════════════════════════════ */
+function renderProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) { showPage('home'); return; }
+
+  document.getElementById('proj-tag').textContent = 'Project';
+  document.getElementById('proj-title').textContent = p.title;
+  document.getElementById('proj-sub').textContent = p.sub || '';
+
+  // Hero
+  const hero = document.getElementById('proj-hero');
+  if (p.heroImage) {
+    hero.outerHTML = `<img class="project-hero-img reveal" id="proj-hero" src="${p.heroImage}" alt="${escHtml(p.title)}">`;
+  } else {
+    hero.className = 'project-hero-img placeholder reveal';
+    hero.textContent = 'No cover image';
+  }
+
+  const contentEl = document.getElementById('proj-content');
+  contentEl.innerHTML = p.content || '';
+
+  // Build TOC from headings
+  buildTOC(contentEl);
+
+  initReveal();
+}
+
+function buildTOC(contentEl) {
+  const tocList = document.getElementById('toc-list');
+  const headings = contentEl.querySelectorAll('h1,h2,h3,h4,h5');
+  if (headings.length === 0) { tocList.innerHTML = ''; return; }
+
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 'section-' + i;
+  });
+
+  tocList.innerHTML = Array.from(headings).map(h => {
+    const level = parseInt(h.tagName[1]);
+    const indent = (level - 1) * 10;
+    return `<li class="toc-item"><a class="toc-link" href="#${h.id}" onclick="scrollToSection('${h.id}',event)">${escHtml(h.textContent)}</a></li>`;
+  }).join('');
+
+  // Intersection observer for active TOC
+  setupTOCObserver(headings);
+}
+
+function scrollToSection(id, e) {
+  e.preventDefault();
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function setupTOCObserver(headings) {
+  if (window._tocObserver) window._tocObserver.disconnect();
+  const links = document.querySelectorAll('.toc-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.toc-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+  headings.forEach(h => observer.observe(h));
+  window._tocObserver = observer;
+}
+
+/* ════════════════════════════════════════
+   ADMIN
+════════════════════════════════════════ */
+function renderAdmin() {
+  if (isLoggedIn) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+    renderSidebar();
+  } else {
+    document.getElementById('admin-login').style.display = 'flex';
+    document.getElementById('admin-dashboard').style.display = 'none';
+  }
+}
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    isLoggedIn = true;
+    err.style.display = 'none';
+    renderAdmin();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+  }
+}
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  isLoggedIn = false;
+  currentProjectId = null;
+  renderAdmin();
+}
+
+function renderSidebar() {
+  const list = document.getElementById('sidebar-list');
+  list.innerHTML = projects.map(p => `
+    <div class="sidebar-project-item ${p.id === currentProjectId ? 'active' : ''}" onclick="selectProject('${p.id}')">
+      <div class="sidebar-project-title">${escHtml(p.title) || 'Untitled'}</div>
+      <div class="sidebar-project-sub">${escHtml(p.sub) || '—'}</div>
+    </div>
+  `).join('');
+}
+
+function selectProject(id) {
+  currentProjectId = id;
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('editor-empty').style.display = 'none';
+  document.getElementById('editor-pane').style.display = 'flex';
+  document.getElementById('preview-pane').style.display = 'flex';
+
+  document.getElementById('edit-title').value = p.title || '';
+  document.getElementById('edit-sub').value = p.sub || '';
+  document.getElementById('rich-editor').innerHTML = p.content || '';
+
+  // Hero
+  currentHeroImage = p.heroImage || null;
+  renderHeroThumb();
+
+  renderSidebar();
+  updatePreview();
+}
+
+let currentHeroImage = null;
+
+function renderHeroThumb() {
+  const container = document.getElementById('hero-thumb-container');
+  const removeBtn = document.getElementById('hero-remove-btn');
+  if (currentHeroImage) {
+    container.innerHTML = `<img class="project-img-preview" src="${currentHeroImage}" alt="Cover">`;
+    removeBtn.style.display = '';
+  } else {
+    container.innerHTML = `<div class="project-img-placeholder" id="hero-placeholder">No cover image</div>`;
+    removeBtn.style.display = 'none';
+  }
+}
+
+function handleHeroImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 4 * 1024 * 1024) { showToast('Image must be under 4 MB'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentHeroImage = e.target.result;
+    renderHeroThumb();
+    updatePreview();
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function removeHeroImage() {
+  currentHeroImage = null;
+  renderHeroThumb();
+  updatePreview();
+}
+
+function newProject() {
+  const id = 'proj-' + Date.now();
+  const p = {
+    id,
+    title: '',
+    sub: '',
+    heroImage: null,
+    content: '',
+    createdAt: new Date().toISOString()
+  };
+  projects.unshift(p);
+  saveProjects();
+  renderSidebar();
+  selectProject(id);
+}
+
+function saveProject() {
+  if (!currentProjectId) return;
+  const idx = projects.findIndex(x => x.id === currentProjectId);
+  if (idx === -1) return;
+
+  projects[idx].title = document.getElementById('edit-title').value.trim() || 'Untitled';
+  projects[idx].sub = document.getElementById('edit-sub').value.trim();
+  projects[idx].heroImage = currentHeroImage;
+  projects[idx].content = document.getElementById('rich-editor').innerHTML;
+
+  saveProjects();
+  renderSidebar();
+  showToast('Project saved');
+}
+
+function deleteCurrentProject() {
+  if (!currentProjectId) return;
+  if (!confirm('Delete this project? This cannot be undone.')) return;
+  projects = projects.filter(x => x.id !== currentProjectId);
+  currentProjectId = null;
+  saveProjects();
+  renderSidebar();
+
+  document.getElementById('editor-empty').style.display = '';
+  document.getElementById('editor-pane').style.display = 'none';
+  document.getElementById('preview-pane').style.display = 'none';
+  showToast('Project deleted');
+}
+
+function updatePreview() {
+  document.getElementById('preview-title').textContent = document.getElementById('edit-title').value || '—';
+  document.getElementById('preview-sub').textContent = document.getElementById('edit-sub').value || '—';
+  document.getElementById('preview-content').innerHTML = document.getElementById('rich-editor').innerHTML;
+
+  const heroContainer = document.getElementById('preview-hero-container');
+  if (currentHeroImage) {
+    heroContainer.innerHTML = `<img src="${currentHeroImage}" style="width:100%;border-radius:4px;margin-bottom:20px;display:block;aspect-ratio:16/9;object-fit:cover">`;
+  } else {
+    heroContainer.innerHTML = '';
+  }
+}
+
+/* Rich editor */
+function execCmd(cmd, val) {
+  document.getElementById('rich-editor').focus();
+  document.execCommand(cmd, false, val || null);
+  updatePreview();
+}
+
+function execInsert(tag) {
+  document.getElementById('rich-editor').focus();
+  document.execCommand('formatBlock', false, tag);
+  updatePreview();
+}
+
+function insertLink() {
+  const url = prompt('Enter URL:');
+  if (url) {
+    document.getElementById('rich-editor').focus();
+    document.execCommand('createLink', false, url);
+    updatePreview();
+  }
+}
+
+function handleMediaInsert(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const isVideo = file.type.startsWith('video/');
+  const limit = 4 * 1024 * 1024;
+  if (file.size > limit) { showToast(`File must be under 4 MB`); input.value = ''; return; }
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const editor = document.getElementById('rich-editor');
+    editor.focus();
+    let html;
+    if (isVideo) {
+      html = `<video controls style="max-width:100%;border-radius:4px;margin:12px 0;display:block"><source src="${e.target.result}"></video>`;
+    } else {
+      html = `<img src="${e.target.result}" style="max-width:100%;border-radius:4px;margin:12px 0;display:block" alt="image">`;
+    }
+    document.execCommand('insertHTML', false, html);
+    updatePreview();
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function handleEditorKey(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
+  }
+}
+
+/* ════════════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════════════ */
+function initReveal() {
+  const els = document.querySelectorAll('.page.active .reveal:not(.in)');
+  if (!els.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+  els.forEach(el => observer.observe(el));
+}
+
+/* Scroll nav border */
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+/* ════════════════════════════════════════
+   UTILS
+════════════════════════════════════════ */
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+loadProjects();
+showPage('home');
+</script>
+</body>
+</html>

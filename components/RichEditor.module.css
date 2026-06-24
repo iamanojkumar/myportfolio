@@ -1,0 +1,118 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 10px;
+  background: white;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: var(--ink3);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-inter), sans-serif;
+  transition: all 0.15s ease;
+}
+
+.button:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.separator {
+  width: 1px;
+  background: var(--line);
+  margin: 4px 2px;
+  align-self: stretch;
+}
+
+.editor {
+  min-height: 400px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 0 0 5px 5px;
+  background: white;
+  outline: none;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ink4);
+  pointer-events: none;
+}
+
+.editor h1,
+.editor h2,
+.editor h3,
+.editor h4,
+.editor h5 {
+  font-family: var(--font-playfair), serif;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.editor h1 {
+  font-size: 28px;
+  margin: 24px 0 12px;
+}
+
+.editor h2 {
+  font-size: 22px;
+  margin: 20px 0 10px;
+}
+
+.editor h3 {
+  font-size: 18px;
+  margin: 18px 0 8px;
+}
+
+.editor h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+}
+
+.editor h5 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 14px 0 6px;
+  color: var(--ink3);
+}
+
+.editor p {
+  margin-bottom: 12px;
+}
+
+.editor img,
+.editor video {
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 12px 0;
+  display: block;
+}
+
+.editor blockquote {
+  border-left: 2px solid var(--ink3);
+  padding-left: 16px;
+  color: var(--ink3);
+  font-style: italic;
+  margin: 12px 0;
+}
