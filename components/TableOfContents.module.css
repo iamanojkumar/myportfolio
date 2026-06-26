@@ -3,6 +3,10 @@
   top: 100px;
 }
 
+.desktop {
+  display: block;
+}
+
 .label {
   font-size: 10px;
   font-weight: 600;
@@ -31,15 +35,15 @@
 }
 
 .indent3 {
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 .indent4 {
-  padding-left: 30px;
+  padding-left: 20px;
 }
 
 .indent5 {
-  padding-left: 40px;
+  padding-left: 30px;
 }
 
 .link {
@@ -64,4 +68,123 @@
 
 .active {
   font-weight: 500;
+}
+
+.scrubber {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    overflow: visible;
+    z-index: 40;
+    pointer-events: none;
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  .scrubber {
+    --toc-accent: #3d9b8f;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: min(58vh, 420px);
+    padding: 12px 4px;
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .scrubberDragging {
+    cursor: grabbing;
+  }
+
+  .marker {
+    display: block;
+    width: 14px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--line);
+    transition: width 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+  .markerLevel3,
+  .markerLevel4,
+  .markerLevel5 {
+    width: 10px;
+    opacity: 0.85;
+  }
+
+  .markerActive {
+    width: 18px;
+    background: var(--toc-accent);
+    opacity: 1;
+  }
+
+  .markerLevel3.markerActive,
+  .markerLevel4.markerActive,
+  .markerLevel5.markerActive {
+    width: 14px;
+  }
+
+  .tooltip {
+    position: absolute;
+    top: var(--tooltip-top, 50%);
+    right: calc(100% + 10px);
+    transform: translateY(-50%);
+    max-width: min(220px, 52vw);
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    box-shadow: 0 8px 24px rgba(10, 10, 10, 0.16);
+    animation: tooltipIn 0.15s ease;
+  }
+
+  .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-left-color: var(--ink);
+  }
+}
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
 }
