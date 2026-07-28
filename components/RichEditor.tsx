@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './RichEditor.module.css';
-
-const sanitizeFilename = (value: string) => value.trim().replace(/^\/+/, '').replace(/\s+/g, '-');
+import { MediaPopover } from './MediaPopover';
+import { uploadMediaFile } from '../lib/uploadMedia';
 
 const getExtension = (filename: string) => {
   const match = filename.toLowerCase().match(/\.([a-z0-9]+)$/);
@@ -36,6 +36,19 @@ export function RichEditor({
   onChange: (next: string) => void;
 }) {
   const editorRef = useRef<HTMLDivElement | null>(null);
+  const toolbarRef = useRef<HTMLDivElement | null>(null);
+  const [activePopover, setActivePopover] = useState<'image' | 'video' | null>(null);
+
+  useEffect(() => {
+    if (!activePopover) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (toolbarRef.current && !toolbarRef.current.contains(event.target as Node)) {
+        setActivePopover(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [activePopover]);
 
   useEffect(() => {
     const editor = editorRef.current;
@@ -61,41 +74,50 @@ export function RichEditor({
     if (url) execCommand('createLink', url);
   };
 
-  const insertImage = () => {
-    const filename = sanitizeFilename(
-      window.prompt('Enter image/GIF filename (e.g. cover.jpg, cover.gif, cover.webp, cover.avif):') || ''
-    );
-    if (!filename) return;
-    const extension = getExtension(filename);
-    if (!IMAGE_TYPES[extension]) {
-      window.alert(`Unsupported image format ".${extension}". Use one of: ${Object.keys(IMAGE_TYPES).join(', ')}.`);
-      return;
-    }
-    const src = `/images/${filename}`;
-    const html = `<img src="${src}" alt="" loading="lazy" style="max-width:100%;border-radius:4px;margin:12px 0;display:block" />`;
+  const insertHtmlAtSelection = (html: string) => {
     if (!editorRef.current) return;
     editorRef.current.focus();
     document.execCommand('insertHTML', false, html);
     updateValue();
   };
 
-  const insertVideo = () => {
-    const filename = sanitizeFilename(
-      window.prompt('Enter video filename (e.g. clip.mp4, clip.webm, clip.ogg, clip.mov):') || ''
+  const insertImageSrc = (src: string) => {
+    insertHtmlAtSelection(
+      `<img src="${src}" alt="" loading="lazy" style="max-width:100%;border-radius:4px;margin:12px 0;display:block" />`
     );
-    if (!filename) return;
-    const extension = getExtension(filename);
-    if (!VIDEO_TYPES[extension]) {
-      window.alert(`Unsupported video format ".${extension}". Use one of: ${Object.keys(VIDEO_TYPES).join(', ')}.`);
-      return;
+  };
+
+  const insertVideoSrc = (src: string, type?: string) => {
+    insertHtmlAtSelection(
+      `<video controls style="max-width:100%;border-radius:4px;margin:12px 0;display:block"><source src="${src}"${
+        type ? ` type="${type}"` : ''
+      } />Your browser does not support the video tag.</video>`
+    );
+  };
+
+  const handleImageUpload = async (file: File) => {
+    const extension = getExtension(file.name);
+    if (!IMAGE_TYPES[extension]) {
+      throw new Error(`Unsupported image format ".${extension || '?'}". Use one of: ${Object.keys(IMAGE_TYPES).join(', ')}.`);
     }
-    const src = `/images/${filename}`;
-    const type = VIDEO_TYPES[extension];
-    const html = `<video controls style="max-width:100%;border-radius:4px;margin:12px 0;display:block"><source src="${src}" type="${type}" />Your browser does not support the video tag.</video>`;
-    if (!editorRef.current) return;
-    editorRef.current.focus();
-    document.execCommand('insertHTML', false, html);
-    updateValue();
+    const url = await uploadMediaFile(file);
+    insertImageSrc(url);
+  };
+
+  const handleVideoUpload = async (file: File) => {
+    const extension = getExtension(file.name);
+    if (!VIDEO_TYPES[extension]) {
+      throw new Error(`Unsupported video format ".${extension || '?'}". Use one of: ${Object.keys(VIDEO_TYPES).join(', ')}.`);
+    }
+    const url = await uploadMediaFile(file);
+    insertVideoSrc(url, VIDEO_TYPES[extension]);
+  };
+
+  const handleImageLink = (url: string) => insertImageSrc(url);
+
+  const handleVideoLink = (url: string) => {
+    const extension = getExtension(url);
+    insertVideoSrc(url, VIDEO_TYPES[extension]);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -109,7 +131,7 @@ export function RichEditor({
 
   return (
     <div>
-      <div className={styles.toolbar}>
+      <div className={styles.toolbar} ref={toolbarRef}>
         <button type="button" className={styles.button} onClick={() => execCommand('formatBlock', 'h1')} title="Heading 1">
           H1
         </button>
@@ -155,12 +177,44 @@ export function RichEditor({
         <button type="button" className={styles.button} onClick={insertLink} title="Link">
           🔗
         </button>
-        <button type="button" className={styles.button} onClick={insertImage} title="Insert image">
-          🖼
-        </button>
-        <button type="button" className={styles.button} onClick={insertVideo} title="Insert video">
-          🎬
-        </button>
+        <div className={styles.toolbarItem}>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => setActivePopover((current) => (current === 'image' ? null : 'image'))}
+            title="Insert image"
+          >
+            🖼
+          </button>
+          {activePopover === 'image' && (
+            <MediaPopover
+              accept="image/*"
+              label="Insert image"
+              onUpload={handleImageUpload}
+              onLink={handleImageLink}
+              onClose={() => setActivePopover(null)}
+            />
+          )}
+        </div>
+        <div className={styles.toolbarItem}>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => setActivePopover((current) => (current === 'video' ? null : 'video'))}
+            title="Insert video"
+          >
+            🎬
+          </button>
+          {activePopover === 'video' && (
+            <MediaPopover
+              accept="video/*"
+              label="Insert video"
+              onUpload={handleVideoUpload}
+              onLink={handleVideoLink}
+              onClose={() => setActivePopover(null)}
+            />
+          )}
+        </div>
         <div className={styles.separator} />
         <button type="button" className={styles.button} onClick={() => execCommand('removeFormat')} title="Clear format">
           ✕

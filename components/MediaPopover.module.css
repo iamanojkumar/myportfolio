@@ -1,0 +1,100 @@
+.popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  width: 260px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--ink3);
+  line-height: 1;
+  padding: 0;
+}
+
+.uploadButton {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: var(--font-inter), sans-serif;
+  cursor: pointer;
+}
+
+.uploadButton:hover {
+  background: var(--line);
+}
+
+.uploadButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.divider {
+  font-size: 11px;
+  color: var(--ink4);
+  text-align: center;
+}
+
+.linkRow {
+  display: flex;
+  gap: 6px;
+}
+
+.linkInput {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-family: var(--font-inter), sans-serif;
+  color: var(--ink);
+}
+
+.insertButton {
+  border: none;
+  background: var(--ink);
+  color: white;
+  border-radius: 4px;
+  padding: 0 12px;
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.insertButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.error {
+  font-size: 12px;
+  color: #B91C1C;
+}

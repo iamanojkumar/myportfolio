@@ -1,12 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdminSidebar } from '../../components/AdminSidebar';
 import { RichEditor } from '../../components/RichEditor';
 import styles from './page.module.css';
 import { getAllProjects, saveProject, deleteProject } from '../../lib/projects';
 import type { Project } from '../../lib/projects';
+import { uploadMediaFile } from '../../lib/uploadMedia';
 
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'portfolio2025';
@@ -23,6 +24,9 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [coverUploading, setCoverUploading] = useState(false);
+  const [coverError, setCoverError] = useState('');
+  const coverFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!loggedIn) return;
@@ -109,7 +113,18 @@ export default function AdminPage() {
     }
   };
 
-  const heroFilename = draft?.heroImage ? draft.heroImage.replace(/^\/images\//, '') : '';
+  const handleCoverFile = async (file: File) => {
+    setCoverUploading(true);
+    setCoverError('');
+    try {
+      const url = await uploadMediaFile(file);
+      updateDraft({ heroImage: url });
+    } catch (err) {
+      setCoverError(err instanceof Error ? err.message : 'Upload failed.');
+    } finally {
+      setCoverUploading(false);
+    }
+  };
 
   if (!loggedIn) {
     return (
@@ -250,15 +265,37 @@ export default function AdminPage() {
                     ) : (
                       <div className="project-img-placeholder">No cover image</div>
                     )}
+                    <div className={styles.coverActions}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => coverFileInputRef.current?.click()}
+                        disabled={coverUploading}
+                      >
+                        {coverUploading ? 'Uploading…' : 'Upload from device'}
+                      </button>
+                      <input
+                        ref={coverFileInputRef}
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          event.target.value = '';
+                          if (file) handleCoverFile(file);
+                        }}
+                      />
+                    </div>
                     <input
                       className={styles.formInput}
                       type="text"
-                      placeholder="my-cover.jpg"
-                      value={heroFilename}
-                      onChange={(event) => updateDraft({ heroImage: event.target.value ? `/images/${event.target.value}` : null })}
+                      placeholder="https://example.com/cover.jpg or /images/cover.jpg"
+                      value={draft.heroImage || ''}
+                      onChange={(event) => updateDraft({ heroImage: event.target.value || null })}
                     />
+                    {coverError && <div className={styles.loginError}>{coverError}</div>}
                     <p className={styles.helperText}>
-                      Drop this file into /public/images/ in your code editor before pushing.
+                      Upload a file, or paste a direct image link. Files already in /public/images/ can be referenced by path (e.g. /images/cover.jpg).
                     </p>
                   </div>
 
@@ -269,7 +306,7 @@ export default function AdminPage() {
                     <div className={styles.spacer6} />
                     <RichEditor value={draft.content} onChange={(next) => updateDraft({ content: next })} />
                     <p className={styles.helperText}>
-                      Use the image and video toolbar buttons to insert filenames, not uploads. Images support JPG, PNG, GIF, WEBP, AVIF, and SVG. Videos support MP4, WEBM, OGG, and MOV.
+                      Use the image and video toolbar buttons to upload from your device or paste a link. Images support JPG, PNG, GIF, WEBP, AVIF, and SVG. Videos support MP4, WEBM, OGG, and MOV.
                     </p>
                   </div>
                 </div>
