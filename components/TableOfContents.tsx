@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLenis } from './SmoothScroll';
 import styles from './TableOfContents.module.css';
 
 export type HeadingItem = {
@@ -10,6 +11,7 @@ export type HeadingItem = {
 };
 
 export function TableOfContents({ headings }: { headings: HeadingItem[] }) {
+  const lenis = useLenis();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [tooltipIndex, setTooltipIndex] = useState<number | null>(null);
@@ -57,10 +59,16 @@ export function TableOfContents({ headings }: { headings: HeadingItem[] }) {
       if (!heading) return;
 
       const target = document.getElementById(heading.id);
-      target?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+      if (target) {
+        if (lenis) {
+          lenis.scrollTo(target, { immediate: !smooth });
+        } else {
+          target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+        }
+      }
       setActiveId(heading.id);
     },
-    [headings]
+    [headings, lenis]
   );
 
   const handleScrubberPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {

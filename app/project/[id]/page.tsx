@@ -1,16 +1,14 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getAllProjects, getProjectById, generateHeadingData } from '../../../lib/projects';
+import { getProjectById, generateHeadingData } from '../../../lib/projects';
 import { TableOfContents } from '../../../components/TableOfContents';
 import { RevealContainer } from '../../../components/RevealContainer';
 import styles from './page.module.css';
 
-export function generateStaticParams() {
-  return getAllProjects().map((project) => ({ id: project.id }));
-}
+export const dynamic = 'force-dynamic';
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  const project = getProjectById(params.id);
+export default async function ProjectPage({ params }: { params: { id: string } }) {
+  const project = await getProjectById(params.id);
 
   if (!project) {
     notFound();

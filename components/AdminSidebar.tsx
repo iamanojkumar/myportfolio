@@ -13,7 +13,7 @@ export function AdminSidebar({
   onNew: () => void;
 }) {
   return (
-    <aside className={styles.sidebar}>
+    <aside className={styles.sidebar} data-lenis-prevent>
       <div className={styles.label}>Projects</div>
       <div className={styles.list}>
         {projects.map((project) => (

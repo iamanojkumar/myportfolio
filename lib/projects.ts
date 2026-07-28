@@ -1,4 +1,4 @@
-import projects from '../data/projects.json';
+import { supabase } from './supabaseClient';
 
 export type Project = {
   id: string;
@@ -9,10 +9,68 @@ export type Project = {
   createdAt: string;
 };
 
-export const getAllProjects = (): Project[] => projects as Project[];
+type ProjectRow = {
+  id: string;
+  title: string;
+  sub: string | null;
+  hero_image: string | null;
+  content: string;
+  created_at: string;
+};
 
-export const getProjectById = (id: string): Project | undefined =>
-  getAllProjects().find((project) => project.id === id);
+const fromRow = (row: ProjectRow): Project => ({
+  id: row.id,
+  title: row.title,
+  sub: row.sub,
+  heroImage: row.hero_image,
+  content: row.content,
+  createdAt: row.created_at,
+});
+
+const toRow = (project: Project) => ({
+  id: project.id,
+  title: project.title,
+  sub: project.sub,
+  hero_image: project.heroImage,
+  content: project.content,
+});
+
+export const getAllProjects = async (): Promise<Project[]> => {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return (data as ProjectRow[]).map(fromRow);
+};
+
+export const getProjectById = async (id: string): Promise<Project | undefined> => {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data ? fromRow(data as ProjectRow) : undefined;
+};
+
+export const saveProject = async (project: Project): Promise<Project> => {
+  const { data, error } = await supabase
+    .from('projects')
+    .upsert(toRow(project))
+    .select()
+    .single();
+
+  if (error) throw error;
+  return fromRow(data as ProjectRow);
+};
+
+export const deleteProject = async (id: string): Promise<void> => {
+  const { error } = await supabase.from('projects').delete().eq('id', id);
+  if (error) throw error;
+};
 
 export const generateHeadingData = (html: string) => {
   const headings: Array<{ id: string; level: number; text: string }> = [];

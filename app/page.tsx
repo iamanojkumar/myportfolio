@@ -3,8 +3,10 @@ import { ProjectList } from '../components/ProjectList';
 import { RevealContainer } from '../components/RevealContainer';
 import styles from './page.module.css';
 
-export default function HomePage() {
-  const projects = getAllProjects();
+export const dynamic = 'force-dynamic';
+
+export default async function HomePage() {
+  const projects = await getAllProjects();
 
   return (
     <main className={styles.page} id="page-home">

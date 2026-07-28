@@ -5,10 +5,27 @@ import styles from './RichEditor.module.css';
 
 const sanitizeFilename = (value: string) => value.trim().replace(/^\/+/, '').replace(/\s+/g, '-');
 
-const getVideoType = (filename: string) => {
-  if (filename.endsWith('.webm')) return 'video/webm';
-  if (filename.endsWith('.ogg')) return 'video/ogg';
-  return 'video/mp4';
+const getExtension = (filename: string) => {
+  const match = filename.toLowerCase().match(/\.([a-z0-9]+)$/);
+  return match ? match[1] : '';
+};
+
+const IMAGE_TYPES: Record<string, string> = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  gif: 'image/gif',
+  webp: 'image/webp',
+  avif: 'image/avif',
+  svg: 'image/svg+xml',
+};
+
+const VIDEO_TYPES: Record<string, string> = {
+  mp4: 'video/mp4',
+  webm: 'video/webm',
+  ogg: 'video/ogg',
+  ogv: 'video/ogg',
+  mov: 'video/quicktime',
 };
 
 export function RichEditor({
@@ -45,10 +62,17 @@ export function RichEditor({
   };
 
   const insertImage = () => {
-    const filename = sanitizeFilename(window.prompt('Enter image filename (e.g. cover.jpg):') || '');
+    const filename = sanitizeFilename(
+      window.prompt('Enter image/GIF filename (e.g. cover.jpg, cover.gif, cover.webp, cover.avif):') || ''
+    );
     if (!filename) return;
+    const extension = getExtension(filename);
+    if (!IMAGE_TYPES[extension]) {
+      window.alert(`Unsupported image format ".${extension}". Use one of: ${Object.keys(IMAGE_TYPES).join(', ')}.`);
+      return;
+    }
     const src = `/images/${filename}`;
-    const html = `<img src="${src}" alt="" style="max-width:100%;border-radius:4px;margin:12px 0;display:block" />`;
+    const html = `<img src="${src}" alt="" loading="lazy" style="max-width:100%;border-radius:4px;margin:12px 0;display:block" />`;
     if (!editorRef.current) return;
     editorRef.current.focus();
     document.execCommand('insertHTML', false, html);
@@ -56,10 +80,17 @@ export function RichEditor({
   };
 
   const insertVideo = () => {
-    const filename = sanitizeFilename(window.prompt('Enter video filename (e.g. clip.mp4):') || '');
+    const filename = sanitizeFilename(
+      window.prompt('Enter video filename (e.g. clip.mp4, clip.webm, clip.ogg, clip.mov):') || ''
+    );
     if (!filename) return;
+    const extension = getExtension(filename);
+    if (!VIDEO_TYPES[extension]) {
+      window.alert(`Unsupported video format ".${extension}". Use one of: ${Object.keys(VIDEO_TYPES).join(', ')}.`);
+      return;
+    }
     const src = `/images/${filename}`;
-    const type = getVideoType(filename);
+    const type = VIDEO_TYPES[extension];
     const html = `<video controls style="max-width:100%;border-radius:4px;margin:12px 0;display:block"><source src="${src}" type="${type}" />Your browser does not support the video tag.</video>`;
     if (!editorRef.current) return;
     editorRef.current.focus();

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { AdminSidebar } from '../../components/AdminSidebar';
 import { RichEditor } from '../../components/RichEditor';
 import styles from './page.module.css';
+import { getAllProjects, saveProject, deleteProject } from '../../lib/projects';
 import type { Project } from '../../lib/projects';
 
 const ADMIN_USER = 'admin';
@@ -19,13 +20,16 @@ export default function AdminPage() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [error, setError] = useState('');
   const [showBanner, setShowBanner] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [savedAt, setSavedAt] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch('/data/projects.json')
-      .then((res) => res.json())
-      .then((data) => setProjects(data))
+    if (!loggedIn) return;
+    getAllProjects()
+      .then(setProjects)
       .catch(() => setProjects([]));
-  }, []);
+  }, [loggedIn]);
 
   const selectedProject = useMemo(
     () => projects.find((project) => project.id === selectedId) || null,
@@ -47,7 +51,7 @@ export default function AdminPage() {
 
   const handleNew = () => {
     const nextProject: Project = {
-      id: `proj-${Date.now()}`,
+      id: crypto.randomUUID(),
       title: '',
       sub: '',
       heroImage: null,
@@ -58,41 +62,51 @@ export default function AdminPage() {
     setProjects(nextProjects);
     setSelectedId(nextProject.id);
     setDraft(nextProject);
+    setSaveError('');
+    setSavedAt(null);
   };
 
   const updateDraft = (patch: Partial<Project>) => {
     setDraft((current) => (current ? { ...current, ...patch } : current));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!draft) return;
-    const nextProjects = projects.map((project) =>
-      project.id === draft.id ? draft : project
-    );
-    setProjects(nextProjects);
-    downloadJson(nextProjects);
+    setSaving(true);
+    setSaveError('');
+    try {
+      const saved = await saveProject(draft);
+      const nextProjects = projects.map((project) =>
+        project.id === saved.id ? saved : project
+      );
+      setProjects(nextProjects);
+      setDraft(saved);
+      setSelectedId(saved.id);
+      setSavedAt(Date.now());
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Failed to save to Supabase.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const downloadJson = (data: Project[]) => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'projects.json';
-    anchor.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!draft || !window.confirm('Delete this project? This cannot be undone.')) {
       return;
     }
-    const nextProjects = projects.filter((project) => project.id !== draft.id);
-    setProjects(nextProjects);
-    setSelectedId(null);
-    setDraft(null);
+    setSaving(true);
+    setSaveError('');
+    try {
+      await deleteProject(draft.id);
+      const nextProjects = projects.filter((project) => project.id !== draft.id);
+      setProjects(nextProjects);
+      setSelectedId(null);
+      setDraft(null);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Failed to delete from Supabase.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const heroFilename = draft?.heroImage ? draft.heroImage.replace(/^\/images\//, '') : '';
@@ -178,25 +192,27 @@ export default function AdminPage() {
                 <div className={styles.editorPaneHeader}>
                   <span className={styles.editorPaneLabel}>Editor</span>
                   <div className={styles.editorHeaderActions}>
-                    <button className="btn btn-danger btn-sm" type="button" onClick={handleDelete}>
+                    <button className="btn btn-danger btn-sm" type="button" onClick={handleDelete} disabled={saving}>
                       Delete
                     </button>
-                    <button className="btn btn-primary btn-sm" type="button" onClick={handleSave}>
-                      Save
+                    <button className="btn btn-primary btn-sm" type="button" onClick={handleSave} disabled={saving}>
+                      {saving ? 'Saving…' : 'Save'}
                     </button>
                   </div>
                 </div>
-                <div className={styles.editorBody}>
+                <div className={styles.editorBody} data-lenis-prevent>
                   {showBanner && (
                     <div className={styles.infoBanner}>
                       <span>
-                        After downloading, replace /data/projects.json in your project, then push to GitHub. Vercel will redeploy automatically.
+                        Changes save directly to Supabase and appear on the public site immediately — no redeploy needed.
                       </span>
                       <button type="button" className={styles.dismissButton} onClick={() => setShowBanner(false)}>
                         ×
                       </button>
                     </div>
                   )}
+                  {saveError && <div className={styles.loginError}>{saveError}</div>}
+                  {!saveError && savedAt && <div className={styles.helperText}>Saved to Supabase.</div>}
 
                   <div className={styles.editorField}>
                     <label className={styles.formLabel}>Project Title</label>
@@ -253,13 +269,13 @@ export default function AdminPage() {
                     <div className={styles.spacer6} />
                     <RichEditor value={draft.content} onChange={(next) => updateDraft({ content: next })} />
                     <p className={styles.helperText}>
-                      Use the image and video toolbar buttons to insert filenames, not uploads.
+                      Use the image and video toolbar buttons to insert filenames, not uploads. Images support JPG, PNG, GIF, WEBP, AVIF, and SVG. Videos support MP4, WEBM, OGG, and MOV.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className={styles.previewPane}>
+              <div className={styles.previewPane} data-lenis-prevent>
                 <div className={styles.previewPaneHeader}>
                   <span className={styles.previewPaneLabel}>Preview</span>
                 </div>
