@@ -306,7 +306,7 @@ export default function AdminPage() {
                     <div className={styles.spacer6} />
                     <RichEditor value={draft.content} onChange={(next) => updateDraft({ content: next })} />
                     <p className={styles.helperText}>
-                      Use the image and video toolbar buttons to upload from your device or paste a link. Images support JPG, PNG, GIF, WEBP, AVIF, and SVG. Videos support MP4, WEBM, OGG, and MOV.
+                      Use the image and video toolbar buttons to upload from your device or paste a link, or just Ctrl/Cmd+V an image copied from the web directly into the editor. Images support JPG, PNG, GIF, WEBP, AVIF, and SVG. Videos support MP4, WEBM, OGG, and MOV.
                     </p>
                   </div>
                 </div>

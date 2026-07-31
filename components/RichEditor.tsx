@@ -28,6 +28,8 @@ const VIDEO_TYPES: Record<string, string> = {
   mov: 'video/quicktime',
 };
 
+const ALLOWED_IMAGE_MIME = new Set(Object.values(IMAGE_TYPES));
+
 export function RichEditor({
   value,
   onChange,
@@ -118,6 +120,56 @@ export function RichEditor({
   const handleVideoLink = (url: string) => {
     const extension = getExtension(url);
     insertVideoSrc(url, VIDEO_TYPES[extension]);
+  };
+
+  const handlePaste = async (event: React.ClipboardEvent<HTMLDivElement>) => {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    let imageFile: File | null = null;
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          imageFile = file;
+          break;
+        }
+      }
+    }
+
+    if (!imageFile) return;
+
+    event.preventDefault();
+
+    if (!ALLOWED_IMAGE_MIME.has(imageFile.type)) {
+      window.alert(`Unsupported image format "${imageFile.type || 'unknown'}".`);
+      return;
+    }
+
+    const placeholderId = `upload-${crypto.randomUUID()}`;
+    insertHtmlAtSelection(
+      `<span id="${placeholderId}" contenteditable="false" style="display:inline-block;padding:4px 8px;border-radius:4px;background:var(--surface,#f2f2f2);color:var(--ink3,#888);font-size:13px;">Uploading image…</span>`
+    );
+
+    try {
+      const url = await uploadMediaFile(imageFile);
+      const placeholder = document.getElementById(placeholderId);
+      if (placeholder) {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = '';
+        img.loading = 'lazy';
+        img.style.cssText = 'max-width:100%;border-radius:4px;margin:12px 0;display:block';
+        placeholder.replaceWith(img);
+        updateValue();
+      }
+    } catch (err) {
+      const placeholder = document.getElementById(placeholderId);
+      if (placeholder) {
+        placeholder.textContent = err instanceof Error ? err.message : 'Image upload failed.';
+        updateValue();
+      }
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -226,6 +278,7 @@ export function RichEditor({
         contentEditable
         onInput={updateValue}
         onKeyDown={handleKeyDown}
+        onPaste={handlePaste}
         data-placeholder="Start writing your project content…"
         suppressContentEditableWarning
       />
