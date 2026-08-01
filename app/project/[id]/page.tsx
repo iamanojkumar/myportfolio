@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getProjectById, generateHeadingData } from '../../../lib/projects';
 import { TableOfContents } from '../../../components/TableOfContents';
 import { RevealContainer } from '../../../components/RevealContainer';
+import { BackToTop } from '../../../components/BackToTop';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -40,6 +41,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
           </article>
         </div>
       </RevealContainer>
+      <BackToTop />
     </main>
   );
 }
