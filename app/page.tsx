@@ -13,13 +13,11 @@ export default async function HomePage() {
       <RevealContainer>
         <div className={styles.container}>
           <section className={`${styles.homeHeader} reveal`}>
-            <div className={styles.homeEyebrow}>Selected Work</div>
             <h1 className={styles.homeTitle}>
               Design & <em>Engineering</em>
-              <br />at the boundary
             </h1>
             <p className={styles.homeBio}>
-              I build things that feel considered — from digital products to physical systems. Based in the space between rigour and intuition.
+              Combining design thinking with technical expertise to create intuitive, scalable digital products. I enjoy taking ideas from research and strategy through UX/UI design to implementation, building experiences that balance user needs, business goals, and engineering feasibility.
             </p>
           </section>
 

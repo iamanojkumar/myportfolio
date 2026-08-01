@@ -17,7 +17,7 @@ export function Nav() {
   return (
     <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
       <Link href="/" className={styles.logo}>
-        Portfolio
+        Manoj
       </Link>
       <div className={styles.right}>
         <Link href="/" className={styles.link}>
