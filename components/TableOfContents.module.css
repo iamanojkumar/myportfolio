@@ -95,14 +95,15 @@
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-end;
+    gap: 8px;
     position: fixed;
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
     width: 28px;
-    height: min(58vh, 420px);
+    max-height: min(58vh, 420px);
     padding: 12px 4px;
     pointer-events: auto;
     touch-action: none;
