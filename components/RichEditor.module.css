@@ -1,12 +1,21 @@
+.wrapper {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: white;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   padding: 10px;
   background: white;
-  border: 1px solid var(--line);
-  border-bottom: none;
-  border-radius: 5px 5px 0 0;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .button {
@@ -46,8 +55,6 @@
 .editor {
   min-height: 400px;
   padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 0 0 5px 5px;
   background: white;
   outline: none;
   font-family: var(--font-inter), sans-serif;

@@ -182,7 +182,7 @@ export function RichEditor({
   };
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       <div className={styles.toolbar} ref={toolbarRef}>
         <button type="button" className={styles.button} onClick={() => execCommand('formatBlock', 'h1')} title="Heading 1">
           H1
