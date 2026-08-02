@@ -65,3 +65,19 @@
 .link:hover::after {
   transform: scaleX(1);
 }
+
+.iconLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--ink3);
+  transition: color 0.2s, background 0.2s;
+}
+
+.iconLink:hover {
+  color: var(--ink);
+  background: var(--surface);
+}

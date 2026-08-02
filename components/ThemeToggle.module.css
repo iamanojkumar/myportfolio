@@ -1,0 +1,18 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.toggle:hover {
+  color: var(--ink);
+  background: var(--surface);
+}
