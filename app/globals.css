@@ -9,6 +9,7 @@
   --line: #D0D0D0;
   --max: 780px;
   --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --bg-rgb: 245, 245, 245;
   color-scheme: light;
 }
 
@@ -21,6 +22,7 @@
   --ink3: #A0A0A0;
   --ink4: #707070;
   --line: #2E2E2E;
+  --bg-rgb: 18, 18, 18;
   color-scheme: dark;
 }
 
@@ -134,7 +136,7 @@ a {
 
 .form-input:focus {
   border-color: var(--ink);
-  background: white;
+  background: var(--surface);
 }
 
 .project-img-preview {

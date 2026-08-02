@@ -12,7 +12,7 @@
 }
 
 .loginCard {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 48px 48px;
@@ -53,7 +53,7 @@
 
 .formInput:focus {
   border-color: var(--ink);
-  background: white;
+  background: var(--surface);
 }
 
 .loginError {
@@ -67,7 +67,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 32px;
-  background: white;
+  background: var(--surface);
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
@@ -112,7 +112,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: white;
+  background: var(--surface);
   flex-shrink: 0;
 }
 
@@ -191,7 +191,7 @@
 .previewPaneHeader {
   padding: 16px 24px;
   border-bottom: 1px solid var(--line);
-  background: white;
+  background: var(--surface);
   flex-shrink: 0;
   position: sticky;
   top: 0;

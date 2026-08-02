@@ -3,7 +3,7 @@
   border-radius: 5px;
   max-height: 60vh;
   overflow-y: auto;
-  background: white;
+  background: var(--surface);
 }
 
 .toolbar {
@@ -11,7 +11,7 @@
   flex-wrap: wrap;
   gap: 4px;
   padding: 10px;
-  background: white;
+  background: var(--surface);
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
@@ -55,7 +55,7 @@
 .editor {
   min-height: 400px;
   padding: 20px;
-  background: white;
+  background: var(--surface);
   outline: none;
   font-family: var(--font-inter), sans-serif;
   font-size: 14px;
