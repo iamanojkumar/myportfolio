@@ -73,8 +73,8 @@
   display: block;
   background: var(--surface);
   margin-bottom: 56px;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+  aspect-ratio: auto;
+  object-fit: contain;
 }
 
 .projectHeroImgPlaceholder {
