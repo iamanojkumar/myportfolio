@@ -148,6 +148,34 @@
   height: 6px;
 }
 
+.featuredToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--bg);
+  transition: border-color 0.2s ease;
+}
+
+.featuredToggle:hover {
+  border-color: var(--ink3);
+}
+
+.featuredToggle input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.featuredToggleText {
+  font-size: 13px;
+  color: var(--ink);
+}
+
 .infoBanner {
   display: flex;
   align-items: center;

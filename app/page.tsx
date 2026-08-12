@@ -1,5 +1,6 @@
-import { getAllProjects } from '../lib/projects';
+import { getAllProjects, splitFeatured } from '../lib/projects';
 import { ProjectList } from '../components/ProjectList';
+import { FeaturedProjects } from '../components/FeaturedProjects';
 import { RevealContainer } from '../components/RevealContainer';
 import styles from './page.module.css';
 
@@ -7,6 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const projects = await getAllProjects();
+  const { featured, rest } = splitFeatured(projects);
 
   return (
     <main className={styles.page} id="page-home">
@@ -21,7 +23,14 @@ export default async function HomePage() {
             </p>
           </section>
 
-          <ProjectList projects={projects} />
+          <FeaturedProjects projects={featured} />
+
+          {rest.length > 0 && (
+            <ProjectList
+              projects={rest}
+              label={featured.length > 0 ? 'All projects' : 'Projects'}
+            />
+          )}
 
           {projects.length === 0 && (
             <div className={styles.noProjects}>

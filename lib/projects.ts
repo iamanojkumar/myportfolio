@@ -6,6 +6,7 @@ export type Project = {
   sub: string | null;
   heroImage: string | null;
   content: string;
+  featured: boolean;
   createdAt: string;
 };
 
@@ -15,6 +16,7 @@ type ProjectRow = {
   sub: string | null;
   hero_image: string | null;
   content: string;
+  featured: boolean | null;
   created_at: string;
 };
 
@@ -24,6 +26,7 @@ const fromRow = (row: ProjectRow): Project => ({
   sub: row.sub,
   heroImage: row.hero_image,
   content: row.content,
+  featured: row.featured ?? false,
   createdAt: row.created_at,
 });
 
@@ -33,6 +36,7 @@ const toRow = (project: Project) => ({
   sub: project.sub,
   hero_image: project.heroImage,
   content: project.content,
+  featured: project.featured,
 });
 
 export const getAllProjects = async (): Promise<Project[]> => {
@@ -44,6 +48,11 @@ export const getAllProjects = async (): Promise<Project[]> => {
   if (error) throw error;
   return (data as ProjectRow[]).map(fromRow);
 };
+
+export const splitFeatured = (projects: Project[]) => ({
+  featured: projects.filter((project) => project.featured),
+  rest: projects.filter((project) => !project.featured),
+});
 
 export const getProjectById = async (id: string): Promise<Project | undefined> => {
   const { data, error } = await supabase

@@ -49,6 +49,12 @@
   text-overflow: ellipsis;
 }
 
+.featuredStar {
+  color: var(--ink3);
+  margin-right: 5px;
+  font-size: 11px;
+}
+
 .projectSub {
   font-size: 11px;
   color: var(--ink4);

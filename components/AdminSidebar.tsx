@@ -23,7 +23,14 @@ export function AdminSidebar({
             className={`${styles.projectItem} ${project.id === currentId ? styles.active : ''}`}
             onClick={() => onSelect(project.id)}
           >
-            <div className={styles.projectTitle}>{project.title || 'Untitled'}</div>
+            <div className={styles.projectTitle}>
+              {project.featured && (
+                <span className={styles.featuredStar} title="Featured project" aria-label="Featured">
+                  ★
+                </span>
+              )}
+              {project.title || 'Untitled'}
+            </div>
             <div className={styles.projectSub}>{project.sub || '—'}</div>
           </button>
         ))}

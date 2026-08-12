@@ -2,11 +2,17 @@ import Link from 'next/link';
 import styles from './ProjectList.module.css';
 import { Project } from '../lib/projects';
 
-export function ProjectList({ projects }: { projects: Project[] }) {
+export function ProjectList({
+  projects,
+  label = 'Projects',
+}: {
+  projects: Project[];
+  label?: string;
+}) {
   return (
     <section className={styles.section}>
       <div className={styles.sectionLabel}>
-        <span>Projects</span>
+        <span>{label}</span>
         <span>— {projects.length}</span>
       </div>
       <ul className={styles.projectList}>

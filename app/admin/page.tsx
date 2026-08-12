@@ -60,6 +60,7 @@ export default function AdminPage() {
       sub: '',
       heroImage: null,
       content: '',
+      featured: false,
       createdAt: new Date().toISOString(),
     };
     const nextProjects = [nextProject, ...projects];
@@ -249,6 +250,22 @@ export default function AdminPage() {
                       value={draft.sub || ''}
                       onChange={(event) => updateDraft({ sub: event.target.value })}
                     />
+                  </div>
+
+                  <div className={styles.editorField}>
+                    <label className={styles.featuredToggle} htmlFor="project-featured">
+                      <input
+                        id="project-featured"
+                        type="checkbox"
+                        checked={draft.featured}
+                        onChange={(event) => updateDraft({ featured: event.target.checked })}
+                      />
+                      <span className={styles.featuredToggleText}>Featured project</span>
+                    </label>
+                    <p className={styles.helperText}>
+                      Featured projects appear in their own section at the top of the homepage, with
+                      their cover image. Save to apply.
+                    </p>
                   </div>
 
                   <div className={styles.editorField}>
