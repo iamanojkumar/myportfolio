@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdminSidebar } from '../../components/AdminSidebar';
 import { RichEditor } from '../../components/RichEditor';
 import styles from './page.module.css';
-import { getAllProjects, saveProject, deleteProject } from '../../lib/projects';
+import { getAllProjects, saveProject, deleteProject, PROJECT_TAGS } from '../../lib/projects';
 import type { Project } from '../../lib/projects';
 import { uploadMediaFile } from '../../lib/uploadMedia';
 
@@ -61,6 +61,7 @@ export default function AdminPage() {
       heroImage: null,
       content: '',
       featured: false,
+      tags: [],
       createdAt: new Date().toISOString(),
     };
     const nextProjects = [nextProject, ...projects];
@@ -73,6 +74,16 @@ export default function AdminPage() {
 
   const updateDraft = (patch: Partial<Project>) => {
     setDraft((current) => (current ? { ...current, ...patch } : current));
+  };
+
+  const toggleTag = (tag: string, checked: boolean) => {
+    setDraft((current) => {
+      if (!current) return current;
+      const tags = checked
+        ? [...current.tags.filter((existing) => existing !== tag), tag]
+        : current.tags.filter((existing) => existing !== tag);
+      return { ...current, tags };
+    });
   };
 
   const handleSave = async () => {
@@ -265,6 +276,31 @@ export default function AdminPage() {
                     <p className={styles.helperText}>
                       Featured projects appear in their own section at the top of the homepage, with
                       their cover image. Save to apply.
+                    </p>
+                  </div>
+
+                  <div className={styles.editorField}>
+                    <label className={styles.formLabel}>Filter Tags</label>
+                    <div className={styles.tagOptions}>
+                      {PROJECT_TAGS.map((tag) => {
+                        const inputId = `project-tag-${tag.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
+                        return (
+                          <label key={tag} className={styles.featuredToggle} htmlFor={inputId}>
+                            <input
+                              id={inputId}
+                              type="checkbox"
+                              checked={draft.tags.includes(tag)}
+                              onChange={(event) => toggleTag(tag, event.target.checked)}
+                            />
+                            <span className={styles.featuredToggleText}>{tag}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <p className={styles.helperText}>
+                      Tags drive the filter chips above the project list on the homepage. A project
+                      can carry several. &ldquo;Designer&rsquo;s pick&rdquo; is the filter shown by
+                      default, so tag your strongest work with it.
                     </p>
                   </div>
 

@@ -1,6 +1,9 @@
+'use client';
+
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import styles from './ProjectList.module.css';
-import { Project } from '../lib/projects';
+import { ALL_TAG, DESIGNERS_PICK, PROJECT_TAGS, Project } from '../lib/projects';
 
 export function ProjectList({
   projects,
@@ -9,14 +12,46 @@ export function ProjectList({
   projects: Project[];
   label?: string;
 }) {
+  // Only offer chips that actually match something, so no filter leads to an empty list.
+  const tags = useMemo(
+    () => PROJECT_TAGS.filter((tag) => projects.some((project) => project.tags.includes(tag))),
+    [projects]
+  );
+
+  const [activeTag, setActiveTag] = useState<string>(() =>
+    tags.includes(DESIGNERS_PICK) ? DESIGNERS_PICK : ALL_TAG
+  );
+
+  const visible =
+    activeTag === ALL_TAG
+      ? projects
+      : projects.filter((project) => project.tags.includes(activeTag));
+
   return (
     <section className={styles.section}>
       <div className={styles.sectionLabel}>
         <span>{label}</span>
-        <span>— {projects.length}</span>
+        <span>— {visible.length}</span>
       </div>
+
+      {tags.length > 0 && (
+        <div className={styles.filters} role="group" aria-label="Filter projects by tag">
+          {[...tags, ALL_TAG].map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              className={styles.filterChip}
+              aria-pressed={activeTag === tag}
+              onClick={() => setActiveTag(tag)}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      )}
+
       <ul className={styles.projectList}>
-        {projects.map((project) => (
+        {visible.map((project) => (
           <li className={`${styles.projectItem} reveal`} key={project.id}>
             <Link href={`/project/${project.id}`} className={styles.projectLink}>
               <div className={styles.projectInfo}>
