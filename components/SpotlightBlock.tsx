@@ -24,23 +24,13 @@ export function SpotlightBlock() {
         </div>
         <div className={styles.body}>
           <h2 className={styles.title}>
-            Mellon — an AI-native, enterprise-ready design system
+            Mellon Design System — AI native, Enterprise ready
           </h2>
           <p className={styles.desc}>
-            A self-driven initiative to design and ship a scalable, accessible,
-            WCAG-aligned component library with AI built into every component —
-            in-context summarization and smart actions. Mellon covers design
-            tokens, governance, documentation and Figma-to-code parity, so
-            product, design and engineering teams ship consistent interfaces
-            faster and cut design debt at scale.
+            A self-driven initiative to ship a scalable, WCAG-aligned component
+            library with AI in every component. Design tokens, governance and
+            Figma-to-code parity help teams ship consistent interfaces faster.
           </p>
-          <ul className={styles.tags}>
-            <li>Design systems</li>
-            <li>AI/UX</li>
-            <li>Accessibility</li>
-            <li>Design tokens</li>
-            <li>Figma to code</li>
-          </ul>
           <span className={styles.cta}>
             View documentation
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
