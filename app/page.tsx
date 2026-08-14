@@ -17,7 +17,7 @@ export default async function HomePage() {
         <div className={styles.container}>
           <section className={`${styles.homeHeader} reveal`}>
             <h1 className={styles.homeTitle}>
-              Design & <em>Engineering</em>
+              Design Engineering & <em>Strategy</em>
             </h1>
             <p className={styles.homeBio}>
               Combining design thinking with technical expertise to create intuitive, scalable digital products. I enjoy taking ideas from research and strategy through UX/UI design to implementation, building experiences that balance user needs, business goals, and engineering feasibility.

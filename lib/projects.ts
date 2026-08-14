@@ -1,5 +1,19 @@
 import { supabase } from './supabaseClient';
 
+/** The tag a project is filtered by on the homepage. Order here is the chip order. */
+export const DESIGNERS_PICK = "Designer's pick";
+
+export const PROJECT_TAGS = [
+  DESIGNERS_PICK,
+  'Mobile App',
+  'Product',
+  'Web design',
+  'Interaction design',
+] as const;
+
+/** Pseudo-tag for the "show everything" chip — never stored on a project. */
+export const ALL_TAG = 'All';
+
 export type Project = {
   id: string;
   title: string;
@@ -7,6 +21,7 @@ export type Project = {
   heroImage: string | null;
   content: string;
   featured: boolean;
+  tags: string[];
   createdAt: string;
 };
 
@@ -17,6 +32,7 @@ type ProjectRow = {
   hero_image: string | null;
   content: string;
   featured: boolean | null;
+  tags: string[] | null;
   created_at: string;
 };
 
@@ -27,6 +43,7 @@ const fromRow = (row: ProjectRow): Project => ({
   heroImage: row.hero_image,
   content: row.content,
   featured: row.featured ?? false,
+  tags: row.tags ?? [],
   createdAt: row.created_at,
 });
 
@@ -37,6 +54,7 @@ const toRow = (project: Project) => ({
   hero_image: project.heroImage,
   content: project.content,
   featured: project.featured,
+  tags: project.tags,
 });
 
 export const getAllProjects = async (): Promise<Project[]> => {

@@ -24,7 +24,7 @@ export function SpotlightBlock() {
         </div>
         <div className={styles.body}>
           <h2 className={styles.title}>
-            Mellon Design System — AI native, Enterprise ready
+            Mellon Design System - AI native, Enterprise ready
           </h2>
           <p className={styles.desc}>
             A self-driven initiative to ship a scalable, WCAG-aligned component
