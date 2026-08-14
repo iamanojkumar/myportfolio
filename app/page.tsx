@@ -1,6 +1,7 @@
 import { getAllProjects, splitFeatured } from '../lib/projects';
 import { ProjectList } from '../components/ProjectList';
 import { FeaturedProjects } from '../components/FeaturedProjects';
+import { SpotlightBlock } from '../components/SpotlightBlock';
 import { RevealContainer } from '../components/RevealContainer';
 import styles from './page.module.css';
 
@@ -22,6 +23,8 @@ export default async function HomePage() {
               Combining design thinking with technical expertise to create intuitive, scalable digital products. I enjoy taking ideas from research and strategy through UX/UI design to implementation, building experiences that balance user needs, business goals, and engineering feasibility.
             </p>
           </section>
+
+          <SpotlightBlock />
 
           <FeaturedProjects projects={featured} />
 
