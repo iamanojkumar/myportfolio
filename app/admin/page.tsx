@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdminSidebar } from '../../components/AdminSidebar';
 import { RichEditor } from '../../components/RichEditor';
+import { VisualDesignsAdmin } from '../../components/VisualDesignsAdmin';
 import styles from './page.module.css';
 import { getAllProjects, saveProject, deleteProject, PROJECT_TAGS } from '../../lib/projects';
 import type { Project } from '../../lib/projects';
@@ -13,6 +14,7 @@ const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'portfolio2025';
 
 export default function AdminPage() {
+  const [tab, setTab] = useState<'projects' | 'visual-designs'>('projects');
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Project | null>(null);
@@ -188,8 +190,22 @@ export default function AdminPage() {
   return (
     <main className={styles.page} id="page-admin">
       <div className={styles.adminHeader}>
-        <span className={styles.adminTitle}>Admin — Projects</span>
+        <span className={styles.adminTitle}>Admin — {tab === 'projects' ? 'Projects' : 'Visual Designs'}</span>
         <div className={styles.adminActions}>
+          <button
+            className={`btn btn-sm ${tab === 'projects' ? 'btn-primary' : 'btn-secondary'}`}
+            type="button"
+            onClick={() => setTab('projects')}
+          >
+            Projects
+          </button>
+          <button
+            className={`btn btn-sm ${tab === 'visual-designs' ? 'btn-primary' : 'btn-secondary'}`}
+            type="button"
+            onClick={() => setTab('visual-designs')}
+          >
+            Visual Designs
+          </button>
           <a className="btn btn-secondary btn-sm" href="/">
             ← View site
           </a>
@@ -199,6 +215,9 @@ export default function AdminPage() {
         </div>
       </div>
 
+      {tab === 'visual-designs' ? (
+        <VisualDesignsAdmin />
+      ) : (
       <div className={styles.adminSidebarLayout}>
         <AdminSidebar
           projects={projects}
@@ -391,6 +410,7 @@ export default function AdminPage() {
           )}
         </div>
       </div>
+      )}
     </main>
   );
 }

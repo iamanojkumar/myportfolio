@@ -1,6 +1,8 @@
 import { getAllProjects, splitFeatured } from '../lib/projects';
+import { getAllVisualDesigns } from '../lib/visualDesigns';
 import { ProjectList } from '../components/ProjectList';
 import { FeaturedProjects } from '../components/FeaturedProjects';
+import { VisualDesigns } from '../components/VisualDesigns';
 import { SpotlightBlock } from '../components/SpotlightBlock';
 import { RevealContainer } from '../components/RevealContainer';
 import styles from './page.module.css';
@@ -8,7 +10,7 @@ import styles from './page.module.css';
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const projects = await getAllProjects();
+  const [projects, visualDesigns] = await Promise.all([getAllProjects(), getAllVisualDesigns()]);
   const { featured, rest } = splitFeatured(projects);
 
   return (
@@ -27,6 +29,8 @@ export default async function HomePage() {
           <SpotlightBlock />
 
           <FeaturedProjects projects={featured} />
+
+          <VisualDesigns designs={visualDesigns} />
 
           {rest.length > 0 && (
             <ProjectList
