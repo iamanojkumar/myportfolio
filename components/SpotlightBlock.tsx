@@ -13,13 +13,16 @@ export function SpotlightBlock() {
         rel="noopener noreferrer"
       >
         <div className={styles.iconWrap}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <video
             className={styles.icon}
-            src="https://mellon.design/wp-content/uploads/2026/04/mellon-design-logo.svg"
-            alt="Mellon Design System logo"
+            src="/mellon-loading.webm"
+            aria-label="Mellon Design System logo"
             width={48}
             height={48}
+            autoPlay
+            loop
+            muted
+            playsInline
           />
         </div>
         <div className={styles.body}>
