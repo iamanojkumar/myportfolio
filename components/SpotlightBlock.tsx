@@ -20,7 +20,6 @@ export function SpotlightBlock() {
             width={48}
             height={48}
             autoPlay
-            loop
             muted
             playsInline
           />

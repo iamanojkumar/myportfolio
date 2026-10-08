@@ -39,7 +39,7 @@
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--surface2);
+  background: #fff;
 }
 
 .icon {
