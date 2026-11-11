@@ -39,11 +39,7 @@ export function VisualDesigns({ designs }: { designs: VisualDesign[] }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img className={styles.cardImage} src={design.imageUrl} alt={design.title || 'Visual design'} />
             )}
-            {design.title && (
-              <div className={`${styles.cardTitle} ${isVideoVisualDesign(design) ? styles.videoTitle : ''}`}>
-                {design.title}
-              </div>
-            )}
+            {design.title && <div className={styles.cardTitle}>{design.title}</div>}
           </div>
         ))}
       </div>
