@@ -8,6 +8,9 @@ export type VisualDesign = {
   createdAt: string;
 };
 
+export const isVideoVisualDesign = (design: VisualDesign): boolean =>
+  /\.mp4(?:$|[?#])/i.test(design.imageUrl);
+
 type VisualDesignRow = {
   id: string;
   title: string | null;

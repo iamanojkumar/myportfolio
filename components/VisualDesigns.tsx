@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import styles from './VisualDesigns.module.css';
-import { VisualDesign } from '../lib/visualDesigns';
+import { isVideoVisualDesign, VisualDesign } from '../lib/visualDesigns';
 
 const PREVIEW_COUNT = 4;
 
@@ -23,9 +23,24 @@ export function VisualDesigns({ designs }: { designs: VisualDesign[] }) {
       <div className={styles.grid}>
         {visible.map((design) => (
           <div className={`${styles.card} reveal`} key={design.id}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className={styles.cardImage} src={design.imageUrl} alt={design.title || 'Visual design'} />
-            {design.title && <div className={styles.cardTitle}>{design.title}</div>}
+            {isVideoVisualDesign(design) ? (
+              <video
+                className={styles.cardImage}
+                src={design.imageUrl}
+                aria-label={design.title || 'Visual design video'}
+                controls
+                playsInline
+                preload="metadata"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className={styles.cardImage} src={design.imageUrl} alt={design.title || 'Visual design'} />
+            )}
+            {design.title && (
+              <div className={`${styles.cardTitle} ${isVideoVisualDesign(design) ? styles.videoTitle : ''}`}>
+                {design.title}
+              </div>
+            )}
           </div>
         ))}
       </div>

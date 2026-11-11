@@ -30,7 +30,7 @@
   flex-direction: column;
 }
 
-.cardImage,
+.cardMedia,
 .cardImagePlaceholder {
   width: 100%;
   aspect-ratio: 4 / 3;

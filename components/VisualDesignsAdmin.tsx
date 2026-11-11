@@ -6,6 +6,7 @@ import styles from './VisualDesignsAdmin.module.css';
 import {
   VisualDesign,
   getAllVisualDesigns,
+  isVideoVisualDesign,
   saveVisualDesign,
   deleteVisualDesign,
 } from '../lib/visualDesigns';
@@ -26,6 +27,14 @@ export function VisualDesignsAdmin() {
   }, []);
 
   const handleAddFile = async (file: File) => {
+    const isImage =
+      file.type.startsWith('image/') || /\.(avif|bmp|gif|jpe?g|png|svg|webp)$/i.test(file.name);
+    const isMp4 = /\.mp4$/i.test(file.name) || file.type === 'video/mp4';
+    if (!isImage && !isMp4) {
+      setError('Choose an image or an MP4 video.');
+      return;
+    }
+
     setUploadingNew(true);
     setError('');
     try {
@@ -103,8 +112,8 @@ export function VisualDesignsAdmin() {
   return (
     <div className={styles.wrapper} data-lenis-prevent>
       <p className={styles.intro}>
-        The first four designs (by order below) show on the homepage; the rest appear when a
-        visitor clicks &ldquo;View more&rdquo;. Use the arrows to reorder.
+        Add images or MP4 videos. The first four designs (by order below) show on the homepage; the
+        rest appear when a visitor clicks &ldquo;View more&rdquo;. Use the arrows to reorder.
       </p>
 
       {error && <div className={styles.emptyState} style={{ color: '#B91C1C', marginBottom: 16 }}>{error}</div>}
@@ -121,7 +130,7 @@ export function VisualDesignsAdmin() {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept="image/*,video/mp4,.mp4"
           hidden
           onChange={(event) => {
             const file = event.target.files?.[0];
@@ -137,14 +146,25 @@ export function VisualDesignsAdmin() {
         <div className={styles.grid}>
           {sorted.map((design, index) => (
             <div className={styles.card} key={design.id}>
-              <Image
-                src={design.imageUrl}
-                alt={design.title || 'Visual design'}
-                width={600}
-                height={450}
-                className={styles.cardImage}
-                unoptimized
-              />
+              {isVideoVisualDesign(design) ? (
+                <video
+                  src={design.imageUrl}
+                  aria-label={design.title || 'Visual design video'}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className={styles.cardMedia}
+                />
+              ) : (
+                <Image
+                  src={design.imageUrl}
+                  alt={design.title || 'Visual design'}
+                  width={600}
+                  height={450}
+                  className={styles.cardMedia}
+                  unoptimized
+                />
+              )}
               <div className={styles.cardBody}>
                 <input
                   className="form-input"
