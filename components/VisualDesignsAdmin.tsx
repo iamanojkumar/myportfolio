@@ -150,7 +150,10 @@ export function VisualDesignsAdmin() {
                 <video
                   src={design.imageUrl}
                   aria-label={design.title || 'Visual design video'}
+                  autoPlay
                   controls
+                  loop
+                  muted
                   playsInline
                   preload="metadata"
                   className={styles.cardMedia}

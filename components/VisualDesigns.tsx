@@ -28,7 +28,10 @@ export function VisualDesigns({ designs }: { designs: VisualDesign[] }) {
                 className={styles.cardImage}
                 src={design.imageUrl}
                 aria-label={design.title || 'Visual design video'}
+                autoPlay
                 controls
+                loop
+                muted
                 playsInline
                 preload="metadata"
               />
